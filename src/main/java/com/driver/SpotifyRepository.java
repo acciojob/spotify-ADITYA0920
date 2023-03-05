@@ -39,6 +39,7 @@ public class SpotifyRepository {
 
     public User createUser(String name, String mobile) {
         users.add(new User(name,mobile));
+
         return new User(name,mobile);
     }
 
@@ -49,10 +50,12 @@ public class SpotifyRepository {
 
     public Album createAlbum(String title, String artistName) {
         List<Album>temp=new ArrayList<>();
+        Artist artist=new Artist(artistName);
         Album album=new Album(title);
-        if(!artists.contains(artistName)){
+        if(!artists.contains(artist)){
             Artist curr= new Artist(artistName);
             temp.add(album);
+            artists.add(artist);
             artistAlbumMap.put(curr,temp);
         }
         else{
@@ -79,9 +82,9 @@ public class SpotifyRepository {
             if(alb.getTitle().equals(albumName)){
                 temp=albumSongMap.get(alb);
                 temp.add(curr);
-                albumSongMap.put(album,temp);
             }
         }
+        albumSongMap.put(album,temp);
         albums.add(album);
         songs.add(curr);
         return curr;
@@ -98,6 +101,7 @@ public class SpotifyRepository {
         if(!users.contains(user)) throw new Exception("User does not exist");
 //        public HashMap<Playlist, List<Song>> playlistSongMap;
 //        public HashMap<Playlist, List<User>> playlistListenerMap;
+        //public HashMap<User, List<Playlist>> userPlaylistMap;
         Playlist plt=new Playlist(title);
         List<Song>temp=new ArrayList<>();
         for(Song song: songs){
@@ -106,14 +110,23 @@ public class SpotifyRepository {
             }
         }
 
+        //USER-PLAYLIST
+        List<Playlist>list=new ArrayList<>();
+        list=userPlaylistMap.get(user1);
+        list.add(plt);
+        userPlaylistMap.put(user1,list);
+
+        //PLAYLIST LIST
+        playlists.add(plt);
+
         playlistSongMap.put(plt,temp);
 
         creatorPlaylistMap.put(user1,plt);
 
-        List<User>list=new ArrayList<>();
-        list=playlistListenerMap.get(plt);
-        list.add(user1);
-        playlistListenerMap.put(plt,list);
+        List<User>list1=new ArrayList<>();
+        list1=playlistListenerMap.get(plt);
+        list1.add(user1);
+        playlistListenerMap.put(plt,list1);
 
 
         return plt;
@@ -133,8 +146,24 @@ public class SpotifyRepository {
                 temp.add(song);
             }
         }
+        //USER-PLAYLIST
+        List<Playlist>list=new ArrayList<>();
+        list=userPlaylistMap.get(user);
+        list.add(plt);
+        userPlaylistMap.put(user,list);
+
+        //PLAYLIST LIST
+        playlists.add(plt);
+
+
         playlistSongMap.put(plt,temp);
         creatorPlaylistMap.put(user,plt);
+
+        //playlistListenerMap
+        List<User>list1=new ArrayList<>();
+        list1=playlistListenerMap.get(plt);
+        list1.add(user);
+        playlistListenerMap.put(plt,list1);
 
         return plt;
     }
@@ -175,6 +204,8 @@ public class SpotifyRepository {
             temp.add(user);
             songLikeMap.put(song,temp);
             song.setLikes(song.getLikes()+likes);
+
+
             Artist art=new Artist();
 
             //serching artist corresponding to given song;
