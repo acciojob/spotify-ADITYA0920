@@ -8,6 +8,11 @@ public class User {
 
     public User() {}
 
+    //Manual
+    public User(String user) {
+        this.mobile = user;
+    }
+
     public User(String name, String mobile) {
         this.name = name;
         this.mobile = mobile;
