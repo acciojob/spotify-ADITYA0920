@@ -8,10 +8,10 @@ public class User {
 
     public User() {}
 
-    //Manual
-    public User(String user) {
-        this.mobile = user;
-    }
+//    //Manual
+//    public User(String mobile) {
+//        this.mobile = mobile;
+//    }
 
     public User(String name, String mobile) {
         this.name = name;
